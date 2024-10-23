@@ -1,0 +1,5 @@
+# Ignore .env files in the root, backend, and frontend directories
+.env
+ai-backend/.env
+backend/.env
+frontend/.env
