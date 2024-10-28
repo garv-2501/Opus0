@@ -1,6 +1,11 @@
 # app/core/config.py
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
+import os
+from dotenv import load_dotenv
+load_dotenv()  # Force reload .env to ensure E2B_API_KEY is captured
+
+
 
 class Settings(BaseSettings):
     OPENAI_API_KEY: str
@@ -12,6 +17,9 @@ class Settings(BaseSettings):
     MONGODB_PASSWORD: str
     MONGODB_HOST: str
     MONGODB_DATABASE: str
+    ANTHROPIC_API_KEY: Optional[str]  # Added for Anthropic API key
+    GOOGLE_API_KEY: Optional[str]     # Added for Google API key
+    E2B_API_KEY: Optional[str]  
 
     class Config:
         env_file = ".env"
@@ -21,3 +29,4 @@ class Settings(BaseSettings):
             self.CORS_ORIGINS.append(self.FRONTEND_URL)
 
 settings = Settings()
+print("E2B_API_KEY:", os.getenv("E2B_API_KEY"))
