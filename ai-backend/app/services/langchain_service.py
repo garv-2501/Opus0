@@ -1,12 +1,23 @@
 # app/services/langchain_service.py
+
+# Langchain imports
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+# Agent imports
+from app.agents.manager_bot import get_model_recommendations
 from app.agents.code_interpreter_agent import generate_and_execute_code
+from app.agents.web_scraper_agent import WebScraperAgent
+
+# Config settings import
 from app.core.config import settings
+# Other libraries
 from typing import List, Dict
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Initialize models
 openai_model = ChatOpenAI(api_key=settings.OPENAI_API_KEY, model="gpt-4o")
@@ -71,3 +82,31 @@ async def handle_code_interpreter_request(input_text: str):
     Handles requests for code execution by generating and running Python code.
     """
     return await generate_and_execute_code(input_text)
+
+async def run_manager_bot(user_input: str):
+    """
+    Runs the manager bot to get model recommendations for the given user input.
+    :param user_input: The user message that needs model recommendations.
+    """
+    recommendations = await get_model_recommendations(user_input)
+    # Log the recommendations for inspection
+    if recommendations:
+        logger.info(f"Manager Bot Recommendations (Inside run_manager_bot): {recommendations}")
+    else:
+        logger.error("Manager Bot returned None or an unexpected format.")
+    return recommendations        
+        
+async def run_web_scraper_agent(query: str) -> Dict:
+    """
+    Runs the Web Scraper Agent to fetch real-time information based on the query.
+    :param query: The query to research and scrape information for.
+    :return: A dictionary with the report and additional metadata like sources, costs, and images.
+    """
+    try:
+        scraper_agent = WebScraperAgent(query=query)
+        result = await scraper_agent.fetch_report()
+        logger.info(f"Web Scraper Agent Result: {result}")
+        return result
+    except Exception as e:
+        logger.error(f"Error running Web Scraper Agent: {e}")
+        return {"error": str(e)}

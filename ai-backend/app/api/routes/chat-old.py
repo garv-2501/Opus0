@@ -1,5 +1,5 @@
 # app/api/routes/chat.py
-from app.services.langchain_service import get_chat_response, handle_code_interpreter_request, run_manager_bot, run_web_scraper_agent
+from app.services.langchain_service import get_chat_response, handle_code_interpreter_request
 from app.db import chat_histories_collection, ADMIN_USER_ID, ADMIN_CONVERSATION_ID
 from datetime import datetime
 import logging
@@ -89,22 +89,7 @@ async def process_message(message: str, model_name: str = "gemini-1.5-flash"):
                 {"$push": {"messages": assistant_message}}
             )
             logger.info(f"Appended assistant response to conversation_id: {conversation_id}")
-            
-        # Log the recommended models in parallel
-        manager_bot_recommendations = await run_manager_bot(message)
-        logger.info(f"Manager Bot Recommendations: {manager_bot_recommendations}")
-        
-        # After obtaining the scraper result
-        if "web_scraper_agent" in manager_bot_recommendations.get("models", []):
-            # Run the web scraper agent if recommended
-            scraper_result = await run_web_scraper_agent(message)
-            logger.info(f"Web Scraper Agent Output: {scraper_result}")
-            
-            # Yield only the links from the scraper result
-            yield f"Sources:\n" + "\n".join(scraper_result['sources'])
-
-
-
+    
     except Exception as e:
         logger.error(f"Error processing message: {e}")
         yield "An error occurred while processing your message."

@@ -20,6 +20,7 @@ langchain-community = "^0.3.1"
 langchain-anthropic = "^0.2.3"
 langchain-google-genai = "^2.0.1"
 e2b-code-interpreter = "^1.0.1"
+gpt-researcher = "^0.10.2"
 
 
 [build-system]

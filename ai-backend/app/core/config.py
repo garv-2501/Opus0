@@ -19,7 +19,10 @@ class Settings(BaseSettings):
     MONGODB_DATABASE: str
     ANTHROPIC_API_KEY: Optional[str]  # Added for Anthropic API key
     GOOGLE_API_KEY: Optional[str]     # Added for Google API key
-    E2B_API_KEY: Optional[str]  
+    E2B_API_KEY: Optional[str]
+    TAVILY_API_KEY: Optional[str]  
+    SCRAPER: Optional[str]  
+    RETRIEVER: Optional[str]    
 
     class Config:
         env_file = ".env"
@@ -29,4 +32,3 @@ class Settings(BaseSettings):
             self.CORS_ORIGINS.append(self.FRONTEND_URL)
 
 settings = Settings()
-print("E2B_API_KEY:", os.getenv("E2B_API_KEY"))
