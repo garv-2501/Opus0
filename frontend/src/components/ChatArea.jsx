@@ -152,7 +152,12 @@ const renderers = {
     );
   },
   ul: (props) => <ul className="list-disc list-inside my-6" {...props} />, // Unordered list
-  ol: (props) => <ol className="list-decimal list-inside my-6" {...props} />, // Ordered list
+  ol: (props) => (
+    <ol className="list-decimal list-inside my-6 pl-6" {...props} />
+  ),
+  li: (props) => (
+    <li className="mb-1" {...props} /> // Ensure this keeps `display: list-item`
+  ),
   table: (props) => (
     <table
       className="table-auto border-collapse w-full my-8 rounded-2xl"

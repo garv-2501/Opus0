@@ -13,6 +13,29 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* General Font Styles for Specific Components */
 .chat-area,
 .search-bar,
@@ -143,4 +166,34 @@
   font-size: 12px;
   color: #888;
   vertical-align: super;
+}
+
+/* Override styles for ordered and unordered lists */
+.chat-area ol,
+.chat-area ul {
+  list-style-type: disc; /* Ensure both lists use bullet points */
+  list-style-position: inside; /* Ensures bullet points are inside the container */
+  padding-left: 1.5rem; /* Add padding for indentation */
+}
+
+/* Nested lists */
+.chat-area ol li > ol,
+.chat-area ul li > ul,
+.chat-area ol li > ul,
+.chat-area ul li > ol {
+  list-style-type: circle; /* Use circle for second-level lists */
+  padding-left: 2rem; /* Increase padding for nested levels */
+}
+
+.chat-area ol li > ol li > ol,
+.chat-area ul li > ul li > ul,
+.chat-area ol li > ul li > ul,
+.chat-area ul li > ol li > ol {
+  list-style-type: square; /* Use square for third-level lists */
+  padding-left: 2.5rem; /* Further increase padding for deeper nesting */
+}
+
+.chat-area li {
+  display: list-item; /* Ensure list items are displayed properly */
+  margin-bottom: 0.5rem; /* Adjust spacing */
 }

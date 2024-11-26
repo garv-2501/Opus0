@@ -16,14 +16,25 @@ export default {
         error: "#F87272", // Error color
         "text-color": "#FFFFFF", // Text color
         "main-area-color": "#070909", // Main area color
-        "sidebar-color": "#49526330", // Sidebar color
-        "sidebar-button-color": "#49526380", // Search bar color
-        "sidebar-button-hover-color": "#495263", // Search bar
-        "search-bar-color": "#49526330", // Search bar color
-        "search-bar-button-color": "#49526380", // Search bar color
+        "search-bar-color": "#17191d", // Search bar color
+        "search-bar-button-color": "#495263", // Search bar color
         "search-bar-button-hover-color": "#495263", // Search bar
         "user-message-color": "#b4c6c760", // User message color
+        sidebar: {
+          bg: "#17191d",
+          hover: "#222222",
+          border: "#2A2A2A",
+          text: {
+            primary: "#FFFFFF",
+            secondary: "#A1A1AA",
+          },
+          accent: {
+            primary: "#3ABFF8",
+            purple: "#9333EA",
+          },
+        },
       },
+
       // Light mode
       // colors: {
       // "base-100": "#FFFFFF", // Base background color

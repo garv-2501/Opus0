@@ -11,6 +11,7 @@ import re  # Import regex for cleaning the response
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
 # Initialize the manager bot model
 manager_model = ChatOpenAI(api_key=settings.OPENAI_API_KEY, model="gpt-4o")
 
@@ -38,20 +39,14 @@ Available Models and Agents:
    - **Examples**:
      - "Provide a JSON list of the top 10 largest cities by population."
      - "What is the chemical formula for water?"
-
-3. **gemini-1.5-flash**
-   - **Best for**:
-     - Fast responses to simple queries
-     - Questions that don't require deep reasoning
-   - **Examples**:
-     - "Who is the president of the United States?"
-     - "What is the boiling point of water?"
+     - "Who is elon musk?"
 
 4. **code_interpreter_agent**
    - **Best for**:
      - Mathematical calculations
      - Problem-solving requiring precise, discrete outputs
      - Avoiding LLM hallucinations in critical computations
+     - Anything that could be calculated or solved programmatically
    - **Examples**:
      - "Calculate the factorial of 20."
      - "Solve this equation: 2x + 5 = 15."
@@ -61,6 +56,7 @@ Available Models and Agents:
    - **Best for**:
      - Retrieving up-to-date information from the internet
      - Accessing current news, events, or updated documentation
+     - Don't use when not required to avoid unnecessary API calls
    - **Examples**:
      - "What's the current weather in New York City?"
      - "Find the latest stock price of Tesla."
@@ -120,15 +116,6 @@ Examples:
     ```json
     {{
       "models": ["gpt-4o"]
-    }}
-    ```
-
-- **User Request**: "Who is Albert Einstein and what are his most significant contributions to science?"
-- **Assistant Output**:
-
-    ```json
-    {{
-      "models": ["gemini-1.5-flash"]
     }}
     ```
 

@@ -1,3 +1,4 @@
+# app/agents/web_scraper_agent.py
 import os
 import logging
 from gpt_researcher import GPTResearcher
@@ -7,42 +8,63 @@ from typing import Dict
 logger = logging.getLogger(__name__)
 
 class WebScraperAgent:
-    def __init__(self, query: str, max_links: int = 5):
+    def __init__(self, query: str):
         """
-        Initializes the Web Scraper Agent with a query and a maximum number of links.
+        Initializes the Web Scraper Agent with a query for a comprehensive research report.
         :param query: The query to research.
-        :param max_links: The maximum number of links to retrieve.
         """
         self.query = query
-        self.max_links = max_links
-        self.researcher = GPTResearcher(query=self.query, report_type="resource_report")  # Use "resource_report" to focus on resources
+        self.researcher = GPTResearcher(query=self.query, report_type="research_report")  # Use "research_report" for in-depth research
 
-    async def fetch_report(self) -> Dict:
+    async def fetch_report(self, output_to_file: bool = True) -> Dict:
         """
-        Conducts research based on the query and returns only the links (sources).
-        :return: A dictionary containing only the links to sources.
-        """
-        logger.info(f"Starting research for query: {self.query}")
+        Conducts research based on the query and returns a comprehensive report.
+        If `output_to_file` is False, directly returns the response without writing to a file.
 
-        # Conduct the research to gather sources
+        :param output_to_file: Determines whether to write the output to a file or return it directly.
+        :return: A dictionary containing the full report, sources, costs, images, and other metadata.
+        """
+        logger.info(f"Starting comprehensive research for query: {self.query}")
+
+        # Conduct the research and generate the report
         await self.researcher.conduct_research()
+        full_report = await self.researcher.write_report()
         
-        # Fetch only the source URLs, limiting to the max_links specified
-        research_sources = self.researcher.get_source_urls()[:self.max_links]
+        # Gather additional details like sources, costs, and images
+        research_sources = self.researcher.get_source_urls()
+        research_costs = self.researcher.get_costs()
+        research_images = self.researcher.get_research_images()
 
-        # Combine the links into a simple text format
-        links_text = f"Sources:\n" + "\n".join(research_sources) + "\n"
+        # Combine the contextual message, user input, and detailed report data
+        complete_data = (
+            "The following output was provided by an LLM that has internet searching and research capabilities. Use the information and references given where useful. OUTPUT:\n\n"
+            f"User Query:\n{self.query}\n\n"
+            f"Research Report:\n{full_report}\n\n"
+            f"Sources:\n" + "\n".join(research_sources) + "\n\n"
+            f"Research Costs: {research_costs}\n"
+            f"Number of Research Images: {len(research_images)}"
+        )
 
-        # Define the output path for saving the links
-        output_path = os.path.join("app", "data", "internet_data.txt")
+        # If output_to_file is True, write all data to the file
+        if output_to_file:
+            output_path = os.path.join("app", "data", "internet_data.txt")
+            with open(output_path, "w") as file:
+                file.write(complete_data)
+            logger.info(f"Saved comprehensive research data to {output_path}")
+        else:
+            # Log that the data was returned directly
+            logger.info("Returning research data directly without saving to file.")
+            return {
+                "data": complete_data,
+                "sources": research_sources,
+                "costs": research_costs,
+                "images": research_images
+            }
 
-        # Write the links to the file, overwriting any existing content
-        with open(output_path, "w") as file:
-            file.write(links_text)
-
-        logger.info(f"Saved links-only research data to {output_path}")
-
-        # Return only the sources in the output
+        # Return all research data
         return {
-            "sources": research_sources
+            "data": full_report,
+            "sources": research_sources,
+            "costs": research_costs,
+            "images": research_images
         }
